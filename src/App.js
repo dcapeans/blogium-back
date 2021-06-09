@@ -69,14 +69,13 @@ app.post("/posts/:id/comments", (req, res) => {
     comments.push(req.body)    
 })
 
-
-
-//////////////////////////////////////////
 app.post("/posts", (req, res) => {
-    console.log(req.body)
+    const newId = Math.random().toFixed(2)*100
+    req.body.id = newId
+    req.body.contentPreview = 'Esta é a estrutura de um post esperado pelo front-end'
+    req.body.commentCount = 0
+    posts.push(req.body)
 })
-//////////////////////////////////////////
-
 
 
 const findPostById = (reqId) => {
