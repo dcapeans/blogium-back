@@ -77,6 +77,22 @@ app.post("/posts", (req, res) => {
     posts.push(req.body)
 })
 
+app.delete("/posts/:id", (req, res) => {
+    const id = +req.params.id
+    deletePost(id)
+})
+
+app.put("/posts/:id", (req, res) => {
+    const id = +req.params.id
+    const post = findPostById(id)
+    req.body.id = id
+    req.body.contentPreview = post.contentPreview
+    req.body.commentCount = post.commentCount
+    const editedPost = req.body
+    editPost(id, editedPost)
+    const newPost = findPostById(id)
+    res.send(newPost)
+})
 
 const findPostById = (reqId) => {
     return posts.find(post => post.id === reqId) 
@@ -84,6 +100,16 @@ const findPostById = (reqId) => {
 
 const findComment = (reqId) => {
     return comments.filter(comment => comment.postId === reqId)
+}
+
+const editPost = (reqId, newPost) => {
+    const postId = findPostById(reqId)
+    posts.splice(postId, 1, newPost)
+}
+
+const deletePost = (reqId) => {
+    const deleteId = posts.findIndex(post => post.id === reqId)
+    posts.splice(deleteId, 1)
 }
 
 app.listen(4000, () => {
